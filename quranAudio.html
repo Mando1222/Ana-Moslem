@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>القرآن</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+<div class="container">
+    <h2 class="page-header">قران بصوت العجمي</h2>
+    <div class="card">
+        <label>اختر السورة:</label>
+        <select id="surahSelect"></select>
+    </div>
+
+    <div class="card">
+        <!-- <label>اختر القارئ:</label> -->
+        <select id="readerSelect">
+            <option value="ajmi">أحمد العجمي</option>
+        </select>
+    </div>
+
+    <button id="playBtn">تشغيل التلاوة</button>
+
+    <div id="audioPlayer"></div>
+
+    <button class="back-btn" onclick="goHome()">عودة</button>
+</div>
+
+<script src="script-audio.js"></script>
+</body>
+</html>

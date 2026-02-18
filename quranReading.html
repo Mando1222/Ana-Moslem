@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ختم القرآن في رمضان</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <!-- العنوان يظهر فقط في الأعلى -->
+    <h2 style="text-align:center; margin-bottom:20px;">ختم القرآن في رمضان</h2>
+
+    <div class="card">
+        <label>اختر اليوم:</label>
+        <select id="daySelect"></select>
+    </div>
+
+    <div class="card">
+        <label>اختر الصلاة:</label>
+        <select id="prayerSelect">
+            <option value="0">الفجر</option>
+            <option value="1">الظهر</option>
+            <option value="2">العصر</option>
+            <option value="3">المغرب</option>
+            <option value="4">العشاء</option>
+        </select>
+    </div>
+
+    <button onclick="loadReading()">عرض القراءة</button>
+
+    <div id="info"></div>
+    <div id="ayat"></div>
+
+<button class="back-btn" onclick="window.location.href='index.html'">
+    عودة
+</button>
+</div>
+
+<!-- السكربت -->
+<script src="script-reading.js"></script>
+
+</body>
+</html>
