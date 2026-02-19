@@ -29,3 +29,94 @@ header{padding:20px;font-size:26px;background:rgba(0,0,0,0.3);}
     font-weight: bold;
     color: white;        /* نفس لون النص العام */
 }
+.container-full { max-width: 900px; margin: 0 auto; padding: 20px; }
+.select-surah { margin-bottom: 20px; padding: 10px; font-size: 18px; border-radius: 8px; width: 100%; }
+.surah-title { font-size: 28px; font-weight: bold; margin-top: 30px; color: #ffd700; }
+.basmala { font-size: 22px; font-weight: bold; color: #00ffd5; margin: 10px 0; }
+.ayah { display: block; font-size: 20px; margin: 5px 0; line-height: 1.8; cursor: pointer; }
+.ayah:hover { background: rgba(255,255,255,0.1); border-radius: 8px; }
+.back-btn { margin-top: 20px; }
+.basmala {
+    font-size: 22px;
+    font-weight: bold;
+    color: #00ffd5;
+    margin: 15px 0; /* مسافة فوق وتحت البسملة */
+    display: block;  /* تضمن أنها على سطر منفصل */
+    text-align: center; /* توسيط النص */
+}
+#qiblaCompass {
+    width: 300px;
+    height: 300px;
+    border: 3px solid white;
+    border-radius: 50%;
+    position: relative;
+    margin: 50px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#compassArrow {
+    font-size: 50px;
+    transition: transform 0.3s ease;
+    position: absolute;
+}
+body {
+    font-family: 'Amiri', serif;
+    background: linear-gradient(135deg,#1b5e20,#2e7d32);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 400px;
+    margin: auto;
+}
+body {
+    font-family: 'Amiri', serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg,#1b5e20,#2e7d32);
+    color: white;
+    text-align: center;
+}
+.container {
+    max-width: 400px;
+    width: 90%;
+}
+#qiblaCompass {
+    width: 300px;
+    height: 300px;
+    border: 5px solid white;
+    border-radius: 50%;
+    margin: 20px auto;
+    position: relative;
+    background: rgba(255,255,255,0.05);
+}
+#compassArrow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center bottom;
+    font-size: 36px;
+    margin-left: -18px;
+    margin-top: -140px; /* الكعبة على حافة الدائرة */
+    transition: transform 0.2s ease-out;
+}
+button, .back-btn {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background: #00c9a7;
+    color: white;
+}
+button:hover, .back-btn:hover { background: #00a387; }

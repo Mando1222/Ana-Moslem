@@ -1,4 +1,4 @@
-// إنشاء قائمة الأيام
+// إنشاء قائمة الأيام (1–30)
 for (let i = 1; i <= 30; i++) {
     let option = document.createElement("option");
     option.value = i;
@@ -10,51 +10,70 @@ function loadReading() {
     const day = parseInt(document.getElementById("daySelect").value);
     const prayer = parseInt(document.getElementById("prayerSelect").value);
 
-    fetch(`https://api.alquran.cloud/v1/juz/${day}/ar`)
-        .then(res => res.json())
-        .then(data => {
-            const ayahs = data.data.ayahs;
-            const perPrayer = Math.floor(ayahs.length / 5);
-            const start = prayer * perPrayer;
-            const end = (prayer === 4) ? ayahs.length : start + perPrayer;
+    fetch("assets/quran.json")
+    .then(res => res.json())
+    .then(result => {
+        const surahs = result.data.surahs; // كل السور
+        const allAyahs = surahs.flatMap(s => {
+            // نضيف رقم السورة واسمها لكل آية
+            return s.ayahs.map(a => ({ ...a, surahNumber: s.number, surahName: s.name }));
+        });
 
-            const ayatDiv = document.getElementById("ayat");
-            ayatDiv.innerHTML = "";
+        const dayAyahs = allAyahs.filter(a => a.juz === day);
 
-            document.getElementById("info").innerHTML =
-                "📅 اليوم " + day + " — الجزء " + day;
+        if (!dayAyahs.length) {
+            document.getElementById("ayat").innerHTML = "❌ لا توجد آيات لهذا الجزء.";
+            return;
+        }
 
-            let lastSurah = null;
+        const perPrayer = Math.floor(dayAyahs.length / 5);
+        const start = prayer * perPrayer;
+        const end = (prayer === 4) ? dayAyahs.length : start + perPrayer;
 
-            for (let i = start; i < end; i++) {
-                const ayah = ayahs[i];
-                const surahNumber = ayah.surah.number;
-                let text = ayah.text;
+        const ayatDiv = document.getElementById("ayat");
+        ayatDiv.innerHTML = "";
 
-                // إزالة أي بسملة داخل الآية نفسها
-                if (ayah.numberInSurah === 1 && text.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ")) {
-                    text = text.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "").trim();
-                }
+        document.getElementById("info").innerHTML =
+            "📅 اليوم " + day + " — الجزء " + day;
 
-                // إضافة البسملة في بداية كل سورة ما عدا سورة التوبة (9)
-                if (lastSurah !== surahNumber && surahNumber !== 9) {
+        let lastSurah = null;
+
+        for (let i = start; i < end; i++) {
+            const ayah = dayAyahs[i];
+            if (!ayah || !ayah.text) continue;
+
+            const surahNumber = ayah.surahNumber;
+            const surahName = ayah.surahName;
+            let text = ayah.text;
+
+            if (ayah.numberInSurah === 1 && text.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ")) {
+                text = text.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "").trim();
+            }
+
+            // إضافة اسم السورة + البسملة عند بداية كل سورة جديدة
+            if (lastSurah !== surahNumber) {
+                let surahDiv = document.createElement("div");
+                surahDiv.className = "basmala";
+                surahDiv.textContent = surahName;
+                ayatDiv.appendChild(surahDiv);
+
+                if (surahNumber !== 9) {
                     let basmalaDiv = document.createElement("div");
                     basmalaDiv.className = "basmala";
                     basmalaDiv.textContent = "بسم الله الرحمن الرحيم";
                     ayatDiv.appendChild(basmalaDiv);
                 }
-
-                lastSurah = surahNumber;
-
-                // عرض الآية
-                let ayahSpan = document.createElement("span");
-                ayahSpan.textContent = text + " (" + ayah.numberInSurah + ") ";
-                ayatDiv.appendChild(ayahSpan);
             }
-        });
-}
 
-// تأثير تحميل الصفحة
-document.addEventListener("DOMContentLoaded", function(){
-    document.body.classList.add("page-loaded");
-});
+            lastSurah = surahNumber;
+
+            let ayahSpan = document.createElement("span");
+            ayahSpan.textContent = text + " (" + ayah.numberInSurah + ") ";
+            ayatDiv.appendChild(ayahSpan);
+        }
+    })
+    .catch(err => {
+        console.error("حدث خطأ في تحميل القرآن:", err);
+        document.getElementById("ayat").innerHTML = "❌ تعذر تحميل القرآن.";
+    });
+}
