@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>القرآن الكريم</title>
+<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/9/97/Al-Quran_icon.png" type="image/png">
+</head>
+<style>
+    body {
+  font-family: 'Amiri', serif;
+  background: #f9f9f9;
+  color: #222;
+  margin: 0;
+  padding: 20px;
+  transition: 0.3s;
+}
+
+.dark {
+  background: #111;
+  color: white;
+}
+
+/* زر الوضع الليلي */
+.dark-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: transparent;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* اختيار السورة والقارئ */
+.top-controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 60px;
+  flex-wrap: wrap;
+}
+
+select {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+/* البحث */
+#searchInput {
+  display: block;
+  margin: 20px auto;
+  padding: 10px;
+  width: 60%;
+  max-width: 400px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+/* شريط التقدم */
+#progressContainer {
+  width: 80%;
+  height: 8px;
+  background: #ddd;
+  margin: 15px auto;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: #4caf50;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+/* النص */
+#quranText {
+  max-width: 900px;
+  margin: 40px auto;
+  font-size: 26px;
+  line-height: 2.4;
+}
+
+.ayah {
+  cursor: pointer;
+  padding: 5px;
+  transition: 0.2s;
+}
+
+.ayah:hover {
+  background: #e0f7fa;
+}
+
+.active {
+  background: gold;
+  border-radius: 6px;
+}
+
+.search-highlight {
+  background: #ffeb3b;
+}
+
+/* أرقام الآيات */
+.ayah-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #4caf50;
+  font-size: 14px;
+  margin: 0 6px;
+  color: #4caf50;
+}
+
+/* زر التشغيل العائم */
+.floating-btn {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  border: none;
+  background: #4caf50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  transition: 0.3s;
+}
+
+.floating-btn:hover {
+  transform: scale(1.1);
+}
+
+.floating-btn svg {
+  width: 30px;
+  height: 30px;
+  fill: white;
+}
+.back-btn {
+padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background: #00c9a7;
+    color: white;
+}
+</style>
+<body>
+
+<!-- زر الوضع الليلي -->
+<button id="darkMode" class="dark-btn">☾</button>
+
+<!-- القسم الأعلى: التحكم -->
+<header class="top-controls">
+  <select id="surahSelect" class="select-surah"></select>
+
+  <select id="reciterSelect">
+    <option value="Alafasy_128kbps">مشاري العفاسي</option>
+    <option value="Husary_128kbps">الحصري</option>
+  </select>
+
+  <input type="text" id="searchInput" placeholder="ابحث داخل السورة..." />
+
+  <button class="back-btn" onclick="goBackToMain()">عودة</button>
+</header>
+
+<!-- عرض السورة -->
+<div id="quranText" class="container-full"></div>
+
+<!-- شريط التقدم -->
+<div id="progressContainer">
+  <div id="progressBar"></div>
+</div>
+
+<!-- مشغل الصوت -->
+<audio id="player"></audio>
+
+<!-- زر التشغيل العائم -->
+<button id="floatingPlay" class="floating-btn">
+  <svg id="playIcon" viewBox="0 0 24 24">
+    <path d="M8 5v14l11-7z"></path>
+  </svg>
+</button>
+
+<script src="audioAndreading.js"></script>
+<script>
+function goBackToMain() {
+    // لو الصفحة الرئيسية هي index.html
+    window.location.href = "index.html";
+}
+</script>
+</body>
+</html>
