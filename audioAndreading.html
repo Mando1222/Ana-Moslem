@@ -1,192 +1,286 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>القرآن الكريم</title>
-<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/9/97/Al-Quran_icon.png" type="image/png">
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-</head>
+
 <style>
-    body {
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+
+body {
+  direction: rtl;
   font-family: 'Amiri', serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: #f9f9f9;
-  color: #222;
+  background: #f1f5f9;
   margin: 0;
   padding: 20px;
   transition: 0.3s;
 }
 
 .dark {
-  background: #111;
+  background: #0f172a;
   color: white;
 }
 
-.dark-btn {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  background: transparent;
-  border: none;
-  font-size: 26px;
-  cursor: pointer;
-  color: inherit;
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.top-controls {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 60px;
-  flex-wrap: wrap;
-}
-
-select {
-  padding: 10px 15px;
-  font-size: 16px;
-  border-radius: 25px;
-  border: 1px solid #ddd;
-  cursor: pointer;
-}
-
-#searchInput {
-  display: block;
-  margin: 20px auto;
-  padding: 10px;
-  width: 60%;
-  max-width: 400px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-}
-
-#progressContainer {
-  width: 80%;
-  height: 8px;
-  background: #ddd;
-  margin: 15px auto;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-#progressBar {
-  height: 100%;
-  width: 0%;
-  background: #4caf50;
-  border-radius: 10px;
-  transition: 0.2s;
-}
-
-#quranText {
+.controls {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   max-width: 900px;
-  margin: 40px auto;
-  font-size: 26px;
-  line-height: 2.4;
-}
-
-.ayah {
-  cursor: pointer;
-  padding: 5px;
-  transition: 0.2s;
-}
-
-.ayah:hover {
-  background: #e0f7fa;
-}
-
-.active {
-  background: gold;
-  border-radius: 6px;
-}
-
-.search-highlight {
-  background: #ffeb3b;
-}
-
-.ayah-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid #4caf50;
-  font-size: 14px;
-  margin: 0 6px;
-  color: #4caf50;
-}
-
-.floating-btn {
-  position: fixed;
-  bottom: 25px;
-  left: 25px;
-  width: 65px;
-  height: 65px;
-  border-radius: 50%;
-  border: none;
-  background: #4caf50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  margin: auto  auto 20px auto;
   transition: 0.3s;
 }
 
-.floating-btn:hover {
-  transform: scale(1.1);
+.dark .controls {
+  background: #1e293b;
 }
 
-.floating-btn svg {
-  width: 30px;
-  height: 30px;
-  fill: white;
+select, button {
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 50px;
 }
-.back-btn {
-padding: 10px 20px;
-    margin: 10px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    background: #00c9a7;
-    color: white;
+
+select {
+  border: 1px solid #ccc;
+}
+
+button {
+  background: #0f766e;
+  color: white;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+.player-controls {
+  margin-top: 10px;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+#progressBar {
+  flex: 1;
+}
+
+#surah {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  max-width: 900px;
+  margin: auto;
+  line-height: 2.3;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+.dark #surah {
+  background: #1e293b;
+}
+
+.ayah {
+  display: inline;
+  font-size: 24px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.ayah:hover {
+  background: #e2e8f0;
+}
+
+.dark .ayah:hover {
+  background: #334155;
+}
+
+.active {
+  background: #0f766e;
+  color: white;
+  padding: 5px 10px;
+  box-shadow: 0 0 10px rgba(15,118,110,0.5);
+}
+/* ============================= */
+/* 📱 موبايل (أقل من 600px) */
+/* ============================= */
+/* ============================= */
+/* 📱 موبايل - السورة Full Screen */
+/* ============================= */
+@media (max-width: 600px) {
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  h1,
+  .controls {
+    display: none;
+  }
+
+  #surah {
+    position: fixed;
+    inset: 0;
+    bottom: 70px; /* مساحة المشغل */
+    width: 100%;
+    height: auto;
+    padding: 20px 10px;
+    border-radius: 0;
+    box-shadow: none;
+    overflow-y: auto;
+    background: white;
+
+    text-align: justify;       /* يخلي الكلام يملأ العرض */
+    text-justify: inter-word;  /* توزيع أفضل للكلمات */
+  }
+
+  .dark #surah {
+    background: #0f172a;
+  }
+
+  .ayah {
+    display: inline;  /* مهم تفضل inline */
+    font-size: 70px;
+    line-height: 2.6;
+  }
+
+}
+/* ============================= */
+/* 📲 تابلت (من 600 لـ 992px) */
+/* ============================= */
+@media (min-width: 601px) and (max-width: 992px) {
+
+  .controls, #surah {
+    max-width: 95%;
+  }
+
+  .ayah {
+    font-size: 70px;
+  }
+
+  .player-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .player-controls button {
+    flex: 1 1 45%;
+  }
+}
+
+
+/* ============================= */
+/* 🖥 شاشات كبيرة */
+/* ============================= */
+@media (min-width: 1400px) {
+
+  #surah {
+    max-width: 1100px;
+  }
+
+  .ayah {
+    font-size: 28px;
+  }
+}
+/* Sticky Player */
+.sticky-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0f766e;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  z-index: 999;
+}
+
+.sticky-player button {
+  background: white;
+  color: #0f766e;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 18px;
+}
+
+.sticky-progress {
+  flex: 1;
+}
+
+#stickyProgress {
+  width: 100%;
+}
+
+/* عشان المحتوى ميتغطّيش */
+body {
+  padding-bottom: 80px;
 }
 </style>
+</head>
 <body>
 
-<button id="darkMode" class="dark-btn">☾</button>
+<h1>القرآن الكريم</h1>
 
-<header class="top-controls">
-  <select id="surahSelect" class="select-surah"></select>
+<div class="controls">
 
-  <select id="reciterSelect">
-    <option value="Alafasy_128kbps">مشاري العفاسي</option>
-    <option value="Husary_128kbps">الحصري</option>
-    <option value="Minshawy_Mujawwad_192kbps">محمد صديق المنشاوي</option>
-</select>
+  <div class="top-bar">
+    <select id="surahSelect"></select>
 
-  <input type="text" id="searchInput" placeholder="ابحث داخل السورة..." />
+    <select id="reciterSelect">
+      <option value="Fares_Abbad_64kbps">فارس عباد</option>
+      <option value="Alafasy_64kbps">مشاري العفاسي</option>
+      <option value="Abdul_Basit_Murattal_64kbps">عبدالباسط (مرتل)</option>
+      <option value="Husary_128kbps">الحصري</option>
+      <option value="Minshawy_Mujawwad_192kbps">محمد صديق المنشاوي</option>
+    </select>
+  </div>
 
-  <button class="back-btn" onclick="goBackToMain()">عودة</button>
-</header>
+  <div class="player-controls">
+    <button onclick="playAll()">تشغيل السورة</button>
+    <button onclick="togglePlay()">إيقاف / تشغيل</button>
+    <button onclick="toggleTheme()">🌙 تبديل الوضع</button>
+  </div>
 
-<div id="quranText" class="container-full"></div>
+  <div class="progress-container">
+    <span id="currentTime">0:00</span>
+    <input type="range" id="progressBar" value="0" min="0" step="1">
+    <span id="duration">0:00</span>
+  </div>
 
-<div id="progressContainer">
-  <div id="progressBar"></div>
 </div>
 
+<div id="surah"></div>
 <audio id="player"></audio>
+<div class="sticky-player">
+  <button onclick="prevAyah()">⏮</button>
+  <button onclick="togglePlay()">⏯</button>
+  <button onclick="nextAyah()">⏭</button>
 
-<button id="floatingPlay" class="floating-btn">
-  <svg id="playIcon" viewBox="0 0 24 24">
-    <path d="M8 5v14l11-7z"></path>
-  </svg>
-</button>
+  <div class="sticky-progress">
+    <input type="range" id="stickyProgress" value="0" min="0" step="1">
+  </div>
+</div>
+<script src="audioAndreading.js"></script>
 
-<script src="audioAndreading.js">
-</script>
 </body>
 </html>

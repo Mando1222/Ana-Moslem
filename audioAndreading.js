@@ -1,100 +1,65 @@
 const surahSelect = document.getElementById("surahSelect");
 const reciterSelect = document.getElementById("reciterSelect");
-const quranText = document.getElementById("quranText");
+const container = document.getElementById("surah");
 const player = document.getElementById("player");
-const floatingPlay = document.getElementById("floatingPlay");
-const playIcon = document.getElementById("playIcon");
-const darkMode = document.getElementById("darkMode");
-const searchInput = document.getElementById("searchInput");
-const progressContainer = document.getElementById("progressContainer");
-const progressBar = document.getElementById("progressBar");
 
 let ayahs = [];
 let currentIndex = 0;
 
-function toArabicNumber(num) {
-  return num.toString().replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
-}
-
-function goBackToMain() {
-    window.location.href = "index.html";
-}
-
-/* تحميل أسماء السور */
+// تحميل قائمة السور
 fetch("https://api.alquran.cloud/v1/surah")
-  .then(res => res.json())
-  .then(data => {
-    data.data.forEach(surah => {
-      const option = document.createElement("option");
-      option.value = surah.number;
-      option.textContent = surah.name;
-      surahSelect.appendChild(option);
-    });
+.then(res => res.json())
+.then(data => {
+  data.data.forEach(surah => {
+    const option = document.createElement("option");
+    option.value = surah.number;
+    option.textContent = surah.number + " - " + surah.name;
+    surahSelect.appendChild(option);
   });
 
-function loadSurah(autoPlay = false) {
-  fetch(`https://api.alquran.cloud/v1/surah/${surahSelect.value}`)
-    .then(res => res.json())
-    .then(data => {
-      const surahData = data.data;
-      ayahs = surahData.ayahs;
-      quranText.innerHTML = "";
+  loadSurah(1);
+});
 
-      ayahs.forEach((ayah, index) => {
-        const span = document.createElement("span");
-        span.classList.add("ayah");
-        span.dataset.index = index;
+surahSelect.addEventListener("change", () => {
+  loadSurah(surahSelect.value);
+});
 
-        let text = ayah.text;
-        if (index === 0 && surahData.bismillahPre) {
-          text = surahData.bismillahPre.text + " " + text;
-        }
+function loadSurah(number) {
+  container.innerHTML = "";
+  fetch(`https://api.alquran.cloud/v1/surah/${number}`)
+  .then(res => res.json())
+  .then(data => {
+    ayahs = data.data.ayahs;
 
-        span.innerHTML = `
-          ${text}
-          <span class="ayah-number">${toArabicNumber(ayah.numberInSurah)}</span>
-        `;
+    ayahs.forEach((ayah, index) => {
+      const span = document.createElement("span");
+      span.classList.add("ayah");
+      span.innerText = ayah.text + " (" + ayah.numberInSurah + ")";
+      span.dataset.index = index;
 
-        quranText.appendChild(span);
-        span.addEventListener("click", () => playAyah(index));
+      span.addEventListener("click", () => {
+        playAyah(index);
       });
 
-      if (autoPlay) {
-        let firstInteraction = false;
-        function startAudioOnce() {
-          if (!firstInteraction) {
-            firstInteraction = true;
-            playAyah(0);
-            document.removeEventListener("click", startAudioOnce);
-          }
-        }
-        document.addEventListener("click", startAudioOnce);
-      }
+      container.appendChild(span);
     });
+  });
 }
 
 function playAyah(index) {
-  currentIndex = index;
+  document.querySelectorAll(".ayah").forEach(a => a.classList.remove("active"));
 
-  const surah = surahSelect.value.padStart(3, "0");
-  const ayahNum = ayahs[index].numberInSurah.toString().padStart(3, "0");
+  const ayahElement = document.querySelector(`.ayah[data-index='${index}']`);
+  ayahElement.classList.add("active");
+
+  const surah = String(surahSelect.value).padStart(3, '0');
+  const ayahNum = String(ayahs[index].numberInSurah).padStart(3, '0');
   const reciter = reciterSelect.value;
 
-  let audioSrc = "";
-  if (index === 0 && surahSelect.value != "9" && ayahs[0].text.startsWith("بسم الله")) {
-    audioSrc = `https://everyayah.com/data/${reciter}/${surah}000.mp3`;
-  } else {
-    audioSrc = `https://everyayah.com/data/${reciter}/${surah}${ayahNum}.mp3`;
-  }
+  player.src = `https://everyayah.com/data/${reciter}/${surah}${ayahNum}.mp3`;
+  player.play();
 
-  player.src = audioSrc;
-  highlightAyah(index);
-  player.play().catch(() => {});
-
-  localStorage.setItem("lastRead", JSON.stringify({
-    surah: surahSelect.value,
-    index: index
-  }));
+  currentIndex = index;
 }
 
 player.addEventListener("ended", () => {
@@ -103,65 +68,94 @@ player.addEventListener("ended", () => {
   }
 });
 
-function highlightAyah(index) {
-  document.querySelectorAll(".ayah").forEach(a => a.classList.remove("active"));
-  const ayah = document.querySelectorAll(".ayah")[index];
-  if (ayah) {
-    ayah.classList.add("active");
-    ayah.scrollIntoView({ behavior: "smooth", block: "center" });
-    const percent = ((index + 1) / ayahs.length) * 100;
-    progressBar.style.width = percent + "%";
+function playAll() {
+  playAyah(0);
+}
+const progressBar = document.getElementById("progressBar");
+const currentTimeEl = document.getElementById("currentTime");
+const durationEl = document.getElementById("duration");
+
+// تشغيل / إيقاف
+function togglePlay() {
+  if (player.paused) {
+    player.play();
+  } else {
+    player.pause();
   }
 }
 
-floatingPlay.addEventListener("click", () => {
-  if (!player.src) return;
-  player.paused ? player.play() : player.pause();
-});
-
-player.addEventListener("play", () => {
-  playIcon.innerHTML = '<path d="M6 5h4v14H6zm8 0h4v14h-4z"></path>';
-});
-
-player.addEventListener("pause", () => {
-  playIcon.innerHTML = '<path d="M8 5v14l11-7z"></path>';
-});
-
-document.addEventListener("keydown", e => {
-  if (e.code === "Space") {
-    e.preventDefault();
-    floatingPlay.click();
-  }
-});
-
-searchInput.addEventListener("input", () => {
-  const value = searchInput.value.trim();
-  document.querySelectorAll(".ayah").forEach((ayah, i) => {
-    ayah.classList.remove("search-highlight");
-    if (value && ayahs[i].text.includes(value)) {
-      ayah.classList.add("search-highlight");
-    }
-  });
-});
-
-progressContainer.addEventListener("click", e => {
-  const rect = progressContainer.getBoundingClientRect();
-  const percent = (e.clientX - rect.left) / rect.width;
-  const index = Math.floor(percent * ayahs.length);
-  playAyah(index);
-});
-
-darkMode.addEventListener("click", () => {
+// Dark Mode
+function toggleTheme() {
   document.body.classList.toggle("dark");
+}
+
+// تحديث شريط التقدم
+player.addEventListener("loadedmetadata", () => {
+  progressBar.max = player.duration;
+  durationEl.textContent = formatTime(player.duration);
 });
 
-surahSelect.addEventListener("change", () => {
-  loadSurah(true);
+player.addEventListener("timeupdate", () => {
+  progressBar.value = player.currentTime;
+  currentTimeEl.textContent = formatTime(player.currentTime);
 });
 
-window.onload = () => {
-  setTimeout(() => {
-    surahSelect.value = 1;
-    loadSurah(true);
-  }, 500);
-};
+// تغيير الوقت من الشريط
+progressBar.addEventListener("input", () => {
+  player.currentTime = progressBar.value;
+});
+
+// تنسيق الوقت
+function formatTime(time) {
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+  return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+}
+const stickyProgress = document.getElementById("stickyProgress");
+
+// التالي
+function nextAyah() {
+  if (currentIndex + 1 < ayahs.length) {
+    playAyah(currentIndex + 1);
+  }
+}
+
+// السابق
+function prevAyah() {
+  if (currentIndex - 1 >= 0) {
+    playAyah(currentIndex - 1);
+  }
+}
+
+// تحديث شريط الـ Sticky
+player.addEventListener("timeupdate", () => {
+  stickyProgress.max = player.duration;
+  stickyProgress.value = player.currentTime;
+});
+
+// تحريك الصوت من الشريط
+stickyProgress.addEventListener("input", () => {
+  player.currentTime = stickyProgress.value;
+});
+
+// Scroll تلقائي للآية
+function playAyah(index) {
+  document.querySelectorAll(".ayah").forEach(a => a.classList.remove("active"));
+
+  const ayahElement = document.querySelector(`.ayah[data-index='${index}']`);
+  ayahElement.classList.add("active");
+
+  ayahElement.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+  const surah = String(surahSelect.value).padStart(3, '0');
+  const ayahNum = String(ayahs[index].numberInSurah).padStart(3, '0');
+  const reciter = reciterSelect.value;
+
+  player.src = `https://everyayah.com/data/${reciter}/${surah}${ayahNum}.mp3`;
+  player.play();
+
+  currentIndex = index;
+}
