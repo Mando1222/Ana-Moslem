@@ -24,7 +24,6 @@
   color: white;
 }
 
-/* زر الوضع الليلي */
 .dark-btn {
   position: fixed;
   top: 20px;
@@ -36,7 +35,6 @@
   color: inherit;
 }
 
-/* اختيار السورة والقارئ */
 .top-controls {
   display: flex;
   justify-content: center;
@@ -53,7 +51,6 @@ select {
   cursor: pointer;
 }
 
-/* البحث */
 #searchInput {
   display: block;
   margin: 20px auto;
@@ -65,7 +62,6 @@ select {
   font-size: 15px;
 }
 
-/* شريط التقدم */
 #progressContainer {
   width: 80%;
   height: 8px;
@@ -83,7 +79,6 @@ select {
   transition: 0.2s;
 }
 
-/* النص */
 #quranText {
   max-width: 900px;
   margin: 40px auto;
@@ -110,7 +105,6 @@ select {
   background: #ffeb3b;
 }
 
-/* أرقام الآيات */
 .ayah-number {
   display: inline-flex;
   align-items: center;
@@ -124,7 +118,6 @@ select {
   color: #4caf50;
 }
 
-/* زر التشغيل العائم */
 .floating-btn {
   position: fixed;
   bottom: 25px;
@@ -163,47 +156,37 @@ padding: 10px 20px;
 </style>
 <body>
 
-<!-- زر الوضع الليلي -->
 <button id="darkMode" class="dark-btn">☾</button>
 
-<!-- القسم الأعلى: التحكم -->
 <header class="top-controls">
   <select id="surahSelect" class="select-surah"></select>
 
   <select id="reciterSelect">
     <option value="Alafasy_128kbps">مشاري العفاسي</option>
     <option value="Husary_128kbps">الحصري</option>
-  </select>
+    <option value="Minshawy_Mujawwad_192kbps">محمد صديق المنشاوي</option>
+</select>
 
   <input type="text" id="searchInput" placeholder="ابحث داخل السورة..." />
 
   <button class="back-btn" onclick="goBackToMain()">عودة</button>
 </header>
 
-<!-- عرض السورة -->
 <div id="quranText" class="container-full"></div>
 
-<!-- شريط التقدم -->
 <div id="progressContainer">
   <div id="progressBar"></div>
 </div>
 
-<!-- مشغل الصوت -->
 <audio id="player"></audio>
 
-<!-- زر التشغيل العائم -->
 <button id="floatingPlay" class="floating-btn">
   <svg id="playIcon" viewBox="0 0 24 24">
     <path d="M8 5v14l11-7z"></path>
   </svg>
 </button>
 
-<script src="audioAndreading.js"></script>
-<script>
-function goBackToMain() {
-    // لو الصفحة الرئيسية هي index.html
-    window.location.href = "index.html";
-}
+<script src="audioAndreading.js">
 </script>
 </body>
 </html>

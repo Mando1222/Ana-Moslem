@@ -12,9 +12,12 @@ const progressBar = document.getElementById("progressBar");
 let ayahs = [];
 let currentIndex = 0;
 
-// تحويل الأرقام للعربي
 function toArabicNumber(num) {
   return num.toString().replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
+}
+
+function goBackToMain() {
+    window.location.href = "index.html";
 }
 
 /* تحميل أسماء السور */
@@ -29,7 +32,6 @@ fetch("https://api.alquran.cloud/v1/surah")
     });
   });
 
-/* تحميل سورة */
 function loadSurah(autoPlay = false) {
   fetch(`https://api.alquran.cloud/v1/surah/${surahSelect.value}`)
     .then(res => res.json())
@@ -38,14 +40,12 @@ function loadSurah(autoPlay = false) {
       ayahs = surahData.ayahs;
       quranText.innerHTML = "";
 
-      // عرض الآيات
       ayahs.forEach((ayah, index) => {
         const span = document.createElement("span");
         span.classList.add("ayah");
         span.dataset.index = index;
 
         let text = ayah.text;
-        // لو أول آية تحتوي على البسملة
         if (index === 0 && surahData.bismillahPre) {
           text = surahData.bismillahPre.text + " " + text;
         }
@@ -73,7 +73,6 @@ function loadSurah(autoPlay = false) {
     });
 }
 
-/* تشغيل آية */
 function playAyah(index) {
   currentIndex = index;
 
@@ -82,8 +81,6 @@ function playAyah(index) {
   const reciter = reciterSelect.value;
 
   let audioSrc = "";
-
-  // أول آية إذا كانت تحتوي على بسملة
   if (index === 0 && surahSelect.value != "9" && ayahs[0].text.startsWith("بسم الله")) {
     audioSrc = `https://everyayah.com/data/${reciter}/${surah}000.mp3`;
   } else {
@@ -100,14 +97,12 @@ function playAyah(index) {
   }));
 }
 
-/* انتهاء آية */
 player.addEventListener("ended", () => {
   if (currentIndex + 1 < ayahs.length) {
     playAyah(currentIndex + 1);
   }
 });
 
-/* تمييز */
 function highlightAyah(index) {
   document.querySelectorAll(".ayah").forEach(a => a.classList.remove("active"));
   const ayah = document.querySelectorAll(".ayah")[index];
@@ -119,7 +114,6 @@ function highlightAyah(index) {
   }
 }
 
-/* زر التشغيل */
 floatingPlay.addEventListener("click", () => {
   if (!player.src) return;
   player.paused ? player.play() : player.pause();
@@ -133,7 +127,6 @@ player.addEventListener("pause", () => {
   playIcon.innerHTML = '<path d="M8 5v14l11-7z"></path>';
 });
 
-/* Space */
 document.addEventListener("keydown", e => {
   if (e.code === "Space") {
     e.preventDefault();
@@ -141,7 +134,6 @@ document.addEventListener("keydown", e => {
   }
 });
 
-/* بحث */
 searchInput.addEventListener("input", () => {
   const value = searchInput.value.trim();
   document.querySelectorAll(".ayah").forEach((ayah, i) => {
@@ -152,7 +144,6 @@ searchInput.addEventListener("input", () => {
   });
 });
 
-/* شريط التقدم */
 progressContainer.addEventListener("click", e => {
   const rect = progressContainer.getBoundingClientRect();
   const percent = (e.clientX - rect.left) / rect.width;
@@ -160,17 +151,14 @@ progressContainer.addEventListener("click", e => {
   playAyah(index);
 });
 
-/* الوضع الليلي */
 darkMode.addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
-/* تغيير السورة */
 surahSelect.addEventListener("change", () => {
   loadSurah(true);
 });
 
-/* تحميل أول سورة */
 window.onload = () => {
   setTimeout(() => {
     surahSelect.value = 1;
